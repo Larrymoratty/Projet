@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  role     String
+  level    Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comments  Comment[]
+  needs     Need[]
+  payments  Payment[]
+  responses Response[]
+
+  ministere   Ministere? @relation(fields: [ministereId], references: [id])
+  ministereId Int?
+}
+
+model Ministere {
+  id         Int         @id @default(autoincrement())
+  name       String
+  users      User[]
+  directions Direction[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Post {
+  id          Int        @id @default(autoincrement())
+  title       String
+  content     String
+  serviceId   Int?
+  service     Service?    @relation(fields: [serviceId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Direction   Direction? @relation(fields: [directionId], references: [id])
+  directionId Int?
+}
+
+model Direction {
+  id            Int       @id @default(autoincrement())
+  name          String
+  chefDirection Json
+  ministereId   Int
+  ministere     Ministere @relation(fields: [ministereId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  needs        Need[]
+  comments     Comment[]
+  services     Service[]
+  posts        Post[]
+  payments     Payment[]
+  responses    Response[]
+  modePayments ModePayment[]
+}
+
+model Service {
+  id          Int       @id @default(autoincrement())
+  name        String
+  chefService Json
+  directionId Int
+  direction   Direction @relation(fields: [directionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  needs Need[]
+
+  Post Post[]
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  content     String
+  directionId Int
+  direction   Direction @relation(fields: [directionId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+model Need {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  fileUrl     String[]
+  content     String  
+  serviceId   Int
+  service     Service   @relation(fields: [serviceId], references: [id])
+  directionId Int
+  direction   Direction @relation(fields: [directionId], references: [id])
+  createdAt   DateTime  @default(now())
+
+  responses Response[]
+}
+
+model Response {
+  id          Int       @id @default(autoincrement())
+  needId      Int
+  need        Need      @relation(fields: [needId], references: [id])
+  directionId Int
+  direction   Direction @relation(fields: [directionId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  content     String // Le contenu de la réponse
+  fileUrl     String[]
+  createdAt   DateTime  @default(now())
+
+  payments Payment[]
+}
+
+model Payment {
+  id            Int         @id @default(autoincrement())
+  price         Int
+  userId        Int
+  directionId   Int
+  direction     Direction   @relation(fields: [directionId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+  modePaymentId Int
+  mode          ModePayment @relation(fields: [modePaymentId], references: [id])
+  responseId    Int
+  response      Response    @relation(fields: [responseId], references: [id])
+  createdAt     DateTime    @default(now())
+}
+
+model ModePayment {
+  id          Int       @id @default(autoincrement())
+  name        String
+  directionId Int
+  direction   Direction @relation(fields: [directionId], references: [id])
+  createdAt   DateTime  @default(now())
+  payments    Payment[]
+}
