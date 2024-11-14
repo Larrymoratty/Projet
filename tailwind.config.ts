@@ -61,6 +61,10 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: ["cupcake", "dark", "emerald"],
+  },
+  
 };
 export default config;
