@@ -32,7 +32,7 @@ const Navbar: React.FC<NavbarPros> = ({ className }) => {
             </Link>
             <ul className='hidden lg:flex xl:flex gap-x-5 items-center font-bold '>
                 <li>
-                    <Link href={'/'} className={`${verifiedPathname('/') && 'text-[#06806b]'}`}>s <HiMiniHome />Accueil</Link>
+                    <Link href={'/'} className={`${verifiedPathname('/') && 'text-[#06806b]'}`}>Accueil</Link>
                 </li>
                 <li>
                     <Link href={'/about'} className={`${verifiedPathname('/about') && 'text-[#06806b]'}`}> A propos de nous</Link>
