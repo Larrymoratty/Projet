@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import Logo from './logo';
+import { HiMiniHome } from 'react-icons/hi2';
 
 type NavbarPros = {
     className?: string
@@ -31,7 +32,7 @@ const Navbar: React.FC<NavbarPros> = ({ className }) => {
             </Link>
             <ul className='hidden lg:flex xl:flex gap-x-5 items-center font-bold '>
                 <li>
-                    <Link href={'/'} className={`${verifiedPathname('/') && 'text-[#06806b]'}`}>Accueil</Link>
+                    <Link href={'/'} className={`${verifiedPathname('/') && 'text-[#06806b]'}`}>s <HiMiniHome />Accueil</Link>
                 </li>
                 <li>
                     <Link href={'/about'} className={`${verifiedPathname('/about') && 'text-[#06806b]'}`}> A propos de nous</Link>
@@ -50,6 +51,7 @@ const Navbar: React.FC<NavbarPros> = ({ className }) => {
                 </Link>
             </div>
         </div>
+        
     )
 }
 
