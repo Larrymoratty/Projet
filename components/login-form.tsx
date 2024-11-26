@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
@@ -9,14 +10,41 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { signIn } from "next-auth/react";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export function LoginForm() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const router = useRouter()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true)
+    e.preventDefault();
+    const result = await signIn("credentials", {
+      redirect: false, // Utilisé pour gérer la redirection manuellement
+      email,
+      password,
+    });
+
+    if (result?.error) {
+      setError("Invalid email or password");
+      setLoading(false)
+    } else {
+      setError(""); // Connexion réussie
+      setLoading(false)
+      router.push("/dashboard");
+    }
+  };
+  
   return (
-    <Card className="mx-auto max-w-sm my-auto mt-5">
+    <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle 
-          className="text-2xl flex item center, color:white text-align:center"
-          font-family="cambria, sans-serif">Connexion</CardTitle>
+          className="text-2xl flex item center, color:white text-align:center">Connexion</CardTitle>
         <CardDescription>
           Entrez votre email ci-dessous pour vous connecter à votre compte
         </CardDescription>
@@ -28,6 +56,8 @@ export function LoginForm() {
             <Input
               id="email"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="m@example.com"
               required
             />
@@ -39,18 +69,15 @@ export function LoginForm() {
                 Mot de passe oublié?
               </Link>
             </div>
-            <Input id="password" type="password" required />
+            <Input id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
           </div>
-          <Button type="submit" className="w-full">
+          <Button onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
             Connexion
-          </Button>
-          <Button variant="outline" className="w-full">
-            Connexion avec Google
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">
           Vous n&apos;avez pas encore un compte?{" "}
-          <Link href="#" className="underline color:blue">
+          <Link href="/inscription" className="underline color:blue">
             S'inscrire
           </Link>
         </div>
