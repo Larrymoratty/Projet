@@ -11,15 +11,17 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { signIn } from "next-auth/react";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { BeatLoader } from "react-spinners"
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [error, setError] = useState('');
+  const router = useRouter();
+  const [disabledButton, setDisabledButton] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     setLoading(true)
@@ -39,7 +41,14 @@ export function LoginForm() {
       router.push("/dashboard");
     }
   };
+
   
+  useEffect(()=> {
+    const verified = !email || !password;
+    setDisabledButton(verified)
+  }, [password, email])
+
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -71,8 +80,8 @@ export function LoginForm() {
             </div>
             <Input id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
           </div>
-          <Button onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
-            Connexion
+          <Button disabled={disabledButton} onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
+            {loading ? <BeatLoader size={10} color="white" /> : "Connexion"}
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">

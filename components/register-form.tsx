@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label";
-import { useState } from "react"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { BeatLoader } from "react-spinners"
 
 
 export function RegisterForm() {
@@ -18,8 +20,12 @@ export function RegisterForm() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async () =>{
+    setLoading(true);
     try{
       const data= {
         email,
@@ -42,10 +48,25 @@ export function RegisterForm() {
       }
 
       console.log('data user :', dataResponse)
+      setEmail('')
+      setPassword('')
+      setName('')
+      router.push("/connexion");
+
     }catch(error){
       console.log('error catch:', error)
+    } finally {
+      setLoading(false)
     }
   }
+
+  
+  useEffect(()=>{
+    const verified = !email || !name || !password;
+    setDisabledButton(verified)
+    
+  },[email, name, password])
+
 
   return (
     <Card className="mx-auto max-w-sm my-5">
@@ -88,11 +109,8 @@ export function RegisterForm() {
             </div>
             <Input id="password" value={password} onChange={(e) => setPassword(e.target.value)}  type="password" required className="h-9" />
           </div>
-          <Button onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
-            Inscription
-          </Button>
-          <Button variant="outline" className="w-full">
-            S'inscrire avec Google
+          <Button disabled={disabledButton} onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
+            {loading ? <BeatLoader size={10} color="white" /> : "Inscription"}
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">
