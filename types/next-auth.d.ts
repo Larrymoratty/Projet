@@ -1,20 +1,14 @@
-import { DefaultSession, DefaultUser } from "next-auth";
+import NextAuth from "next-auth";
 
-// Étendre le type User
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string; // ID de l'utilisateur
+      id: string; // Ajoute l'ID de l'utilisateur
       name?: string | null;
-      email: string;
-      role: string;
-      level: number;
-    };
+      email: string | null;
+      level?: number
+      role : string | null;
+    } & DefaultSession["user"]; // Conserve les autres propriétés
   }
 
-  interface User extends DefaultUser {
-    id: string;
-    role: string;
-    level: number;
-  }
 }
