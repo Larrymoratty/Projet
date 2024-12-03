@@ -32,7 +32,7 @@ export function LoginForm() {
       setError("Invalid email or password");
       setLoading(false)
     } else {
-      setError(""); // Connexion réussie
+      setError("Connected"); // Connexion réussie
       setLoading(false)
       router.push("/dashboard");
     }
@@ -89,7 +89,7 @@ export function LoginForm() {
                   Mot de passe oublié?
                 </Link>
               </div>
-              <Input id="password" type="password" required className="w-full" />
+              
               <Input id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
             </div>
 
