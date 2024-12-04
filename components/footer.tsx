@@ -13,12 +13,12 @@ type FooterPros = {
 
 const Footer: React.FC<FooterPros> = ({ className }) => {
     return (
-        <div className={cn(className, 'border border-t flex flex-col items-center gap-y-2')}>
+        <div className={cn(className, 'border border-t flex flex-col items-center gap-y-1')}>
             <Link href={'/'}>
                 <Logo />
             </Link>
-            <div className='bg-[#06806b] w-full'>
-                <div className="flex justify-between items-center px-10 py-4">
+            <div className='bg-[#06806b] w-full pb-2'>
+                <div className="flex flex-col justify-center items-center px-10 py-4">
                     {/* Section des logos sociaux */}
                     <ul className='flex items-center gap-x-10'>
                         <li className='border-2 rounded-full h-10 w-10 border-white flex items-center justify-center p-1'>
@@ -37,22 +37,11 @@ const Footer: React.FC<FooterPros> = ({ className }) => {
                             </Link>
                         </li>
                     </ul>
-                    
-                    {/* Section liens à propos et contact */}
-                    <div className='flex flex-col items-center gap-y-2'>
-                        <Link href='/about' className='text-white hover:text-[#87CEEB]'>
-                            À propos de nous
-                        </Link>
-                        <Link href='/contact' className='text-white hover:text-[#87CEEB]'>
-                            Contact
-                        </Link>
-                    </div>
                 </div>
-            </div>
-
-            {/* Section Copyright */}
-            <div className='w-full py-4 bg-gray-900 text-white text-center'>
-                <p>&copy; 2024 Gabon Connected, Tous droits réservés.</p>
+                {/* Section Copyright */}
+                <div className='w-full text-white text-center'>
+                    <p>&copy; 2024 Gabon Connected, Tous droits réservés.</p>
+                </div>
             </div>
         </div>
     );
