@@ -1,12 +1,14 @@
+'use client';
+import { SignupForm } from "@/components/sign-up"; 
 import React from 'react';
 import { RegisterForm } from '@/components/register-form';
 
-const page = () => {
+const Page = () => {
   return (
-    <div className="flex flex-col flex-1 w-full items-center justify-center px-4">
-      <RegisterForm />
+    <div>
+      <SignupForm />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

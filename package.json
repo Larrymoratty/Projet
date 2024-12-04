@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
+    "build": "next build",
     "lint": "next lint"
   },
   "dependencies": {
