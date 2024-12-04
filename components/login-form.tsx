@@ -37,6 +37,7 @@ export function LoginForm() {
       router.push("/dashboard");
     }
   };
+  
   return (
     <div
       className="min-h-screen flex items-center justify-center relative overflow-hidden"
