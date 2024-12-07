@@ -10,16 +10,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FcGoogle } from "react-icons/fc";
-import { signIn } from "next-auth/react";
-import { useState } from "react"
+import { signIn, getSession } from "next-auth/react";
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { BeatLoader } from "react-spinners";
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(false);
   const [error, setError] = useState('')
-  const router = useRouter()
+  const router = useRouter();
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     setLoading(true)
     e.preventDefault();
@@ -33,10 +37,24 @@ export function LoginForm() {
       setLoading(false)
     } else {
       setError("Connected"); // Connexion réussie
+
+      const session = await getSession();
+      console.log('session : ', session)
+      if(session?.user.role === "admin"){
+        router.push("/admin/dashboard");
+      }else{
+        router.push("/dashboard");
+      }
       setLoading(false)
-      router.push("/dashboard");
+
     }
   };
+
+  useEffect(() => {
+    const verified = !email || !password;
+    setDisabledButton(verified)
+
+  }, [email, password])
   
   return (
     <div
@@ -96,8 +114,8 @@ export function LoginForm() {
 
             {/* Boutons */}
             
-            <Button onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
-              Connexion
+            <Button disabled={disabledButton} onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
+              {loading ? <BeatLoader size={10} color="white" /> : "Connexion"}
             </Button>
             <Button
               variant="outline"
