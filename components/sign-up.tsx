@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react"; // Import de React et useState
+import React, { useEffect, useState } from "react"; // Import de React et useState
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,15 +13,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
+import { BeatLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
 export function SignupForm() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
-      const data = { email, name, password };
+      const data = { email, name, password, user: 'user' };
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
@@ -34,10 +40,20 @@ export function SignupForm() {
         console.log('error :', dataResponse);
       }
       console.log('data user :', dataResponse);
+      router.push("/connexion");
     } catch (error) {
       console.log('error catch:', error);
+    } finally {
+      setLoading(false)
     }
   };
+
+  useEffect(() => {
+    const verified = !email || !name || !password;
+    setDisabledButton(verified)
+
+  }, [email, name, password])
+
 
   return (
     <div
@@ -100,9 +116,10 @@ export function SignupForm() {
               />
             </div>
 
-            <Button type="button" className="w-full bg-[#06806b]" onClick={handleSubmit}>
-              S'inscrire
+            <Button disabled={disabledButton} onClick={handleSubmit} type="submit" className="w-full bg-[#06806b] hover:bg-[#06806b]/50">
+              {loading ? <BeatLoader size={10} color="white" /> : "Inscription"}
             </Button>
+
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
